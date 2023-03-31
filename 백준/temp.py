@@ -1,24 +1,42 @@
-def dfs(queen,size,row):
-    count=0
+import sys
+from collections import deque
+input=sys.stdin.readline
 
-    if size==row:
-        return 1
-    
-    for col in range(size):
-        queen[row]=col
+n,m = map(int,input().split())
+graph = [list(map(int,input().split())) for _ in range(n)]
 
-        for x in range(row):
-            if queen[x]==queen[row]:
-                break
+dx=[0,0,-1,1]
+dy=[-1,1,0,0]
 
-            if abs(queen[x]-queen[row])==row-x:
-                break
+def bfs():
+    queue=deque([[0,0]])
+    visited[0,0]=1
+    while queue:
+        x,y=queue.popleft()
 
-        else:
-            count+=dfs(queen,size,row+1)
-    
-    return count
+        for i in range(4):
+            nx=x+dx[i]
+            ny=y+dy[i]
 
-def solution(n):
-    queen=[0]*n
-    return dfs(queen,n,0)
+            if 0<=nx<n and 0<=ny<m and visited[nx][ny]==0:
+                if graph[nx][ny]>=1:
+                    graph[nx][ny]+=1
+                else:
+                    visited[nx][ny]=1
+                    queue.append([nx,ny])
+
+answer=0
+while True:
+    visited=[[0 for _ in range(m)] for _ in range(n)]
+    bfs()
+    flag=0
+
+    for i in range(n):
+        for j in range(m):
+            if graph[i][j]>=3:
+                graph[i][j]=0
+                flag=1
+            elif graph[i][j]==2:
+                graph[i][j]=1
+        
+        
